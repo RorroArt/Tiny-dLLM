@@ -26,15 +26,10 @@ def get_config():
     c.sgd_momentum = 0.9
     c.sgd_nesterov = True
     
-    c.muon_lr = 0.02
-    c.muon_momentum = 0.95
-    c.muon_nesterov = True
-    c.muon_backend = "newtonschulz5"
-    c.muon_auxiliary_lr = lambda: c.muon_lr * 0.1
     
     c.output_dir = "modernbert-diffusion-single-with-prefix"
     c.save_strategy = "epoch"
     c.save_total_limit = 1
-    c.logging_steps = 200
+    c.logging_steps = 10
     
     return c

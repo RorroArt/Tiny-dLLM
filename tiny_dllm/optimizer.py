@@ -13,36 +13,10 @@ def create_optimizer(model, c):
         return optimizer
     
     elif c.optimizer_name == "muon":
-        try:
-            from muon import Muon
-        except ImportError:
-            raise ImportError(
-                "Muon optimizer not installed. Install with: pip install git+https://github.com/KellerJordan/Muon"
-            )
-        
-        hidden_weights = [p for p in model.parameters() if p.ndim >= 2]
-        other_params = [p for p in model.parameters() if p.ndim < 2]
-        
-        param_groups = [
-            {
-                'params': hidden_weights,
-                'lr': c.muon_lr,
-                'momentum': c.muon_momentum,
-            },
-            {
-                'params': other_params,
-                'lr': c.muon_auxiliary_lr,
-            }
-        ]
-        
-        optimizer = Muon(
-            param_groups,
-            lr=c.muon_lr,
-            momentum=c.muon_momentum,
-            nesterov=c.muon_nesterov,
-            backend=c.muon_backend,
+        raise NotImplementedError(
+            "Muon optimizer not yet implemented. "
+            "Will be added in a future branch."
         )
-        return optimizer
     
     elif c.optimizer_name == "sgd":
         optimizer = torch.optim.SGD(

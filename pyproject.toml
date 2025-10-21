@@ -5,19 +5,10 @@ description = "Diffusion-style training for masked language models using ModernB
 requires-python = ">=3.10"
 dependencies = [
     "torch>=2.0.0",
-    "transformers>=4.30.0",
+    "transformers[torch]>=4.30.0",
     "datasets>=2.0.0",
     "sws-config",
 ]
-
-[project.optional-dependencies]
-muon = [
-    "muon-optimizer @ git+https://github.com/KellerJordan/Muon",
-]
-
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
 
 [tool.uv]
 dev-dependencies = []

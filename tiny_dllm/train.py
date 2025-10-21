@@ -1,8 +1,8 @@
 import sws
 from transformers import AutoModelForMaskedLM, Trainer, TrainingArguments
 
-from data import prepare_dataset, create_diffusion_collator
-from optimizer import create_optimizer
+from .data import prepare_dataset, create_diffusion_collator
+from .optimizer import create_optimizer
 
 
 def train(c):
@@ -39,6 +39,9 @@ def train(c):
             eval_dataset=tokenized["validation"],
             data_collator=diffusion_collator,
             tokenizer=tokenizer,
+            save_strategy=c.save_strategy,
+            save_total_limit=c.save_total_limit,
+            logging_steps=c.logging_steps,
         )
     else:
         print(f"Creating custom optimizer: {c.optimizer_name}")
