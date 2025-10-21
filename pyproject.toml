@@ -8,6 +8,7 @@ dependencies = [
     "transformers[torch]>=4.30.0",
     "datasets>=2.0.0",
     "sws-config",
+    "wandb>=0.15.0",
 ]
 
 [tool.uv]

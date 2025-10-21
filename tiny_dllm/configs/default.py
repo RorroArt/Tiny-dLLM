@@ -17,7 +17,7 @@ def get_config():
     
     c.optimizer_name = "adamw"
     
-    c.learning_rate = 5e-5
+    c.learning_rate = 3e-4
     c.weight_decay = 0.01
     c.adam_beta1 = 0.9
     c.adam_beta2 = 0.999
@@ -26,6 +26,11 @@ def get_config():
     c.sgd_momentum = 0.9
     c.sgd_nesterov = True
     
+    c.max_grad_norm = 1.0
+    
+    c.wandb_project = "tiny-dllm"
+    c.wandb_run_name = "test"
+    c.use_wandb = True
     
     c.output_dir = "modernbert-diffusion-single-with-prefix"
     c.save_strategy = "epoch"

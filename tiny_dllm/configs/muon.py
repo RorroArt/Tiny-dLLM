@@ -25,6 +25,12 @@ def get_config():
     
     c.weight_decay = 0.0
     
+    c.max_grad_norm = 1.0
+    
+    c.wandb_project = "tiny-dllm"
+    c.wandb_run_name = None
+    c.use_wandb = True
+    
     c.output_dir = "modernbert-diffusion-muon"
     c.save_strategy = "epoch"
     c.save_total_limit = 1

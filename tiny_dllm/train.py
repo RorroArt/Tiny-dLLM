@@ -1,4 +1,5 @@
 import sws
+import wandb
 from transformers import AutoModelForMaskedLM, Trainer, TrainingArguments
 
 from .data import prepare_dataset, create_diffusion_collator
@@ -6,6 +7,26 @@ from .optimizer import create_optimizer
 
 
 def train(c):
+    if c.use_wandb:
+        wandb.init(
+            project=c.wandb_project,
+            name=c.wandb_run_name,
+            config={
+                "model_name": c.model_name,
+                "dataset_name": c.dataset_name,
+                "dataset_config": c.dataset_config,
+                "learning_rate": c.learning_rate,
+                "weight_decay": c.weight_decay,
+                "batch_size": c.batch_size,
+                "num_epochs": c.num_epochs,
+                "max_len": c.max_len,
+                "prefix_len": c.prefix_len,
+                "n_steps": c.n_steps,
+                "optimizer_name": c.optimizer_name,
+                "max_grad_norm": c.max_grad_norm,
+            }
+        )
+    
     print(f"Loading dataset: {c.dataset_name}/{c.dataset_config}")
     tokenized, tokenizer = prepare_dataset(c)
     
@@ -30,6 +51,9 @@ def train(c):
             adam_beta2=c.adam_beta2,
             adam_epsilon=c.adam_epsilon,
             optim="adamw_torch",
+            max_grad_norm=c.max_grad_norm,
+            report_to="wandb" if c.use_wandb else "none",
+            run_name=c.wandb_run_name,
         )
         
         trainer = Trainer(
@@ -39,9 +63,6 @@ def train(c):
             eval_dataset=tokenized["validation"],
             data_collator=diffusion_collator,
             tokenizer=tokenizer,
-            save_strategy=c.save_strategy,
-            save_total_limit=c.save_total_limit,
-            logging_steps=c.logging_steps,
         )
     else:
         print(f"Creating custom optimizer: {c.optimizer_name}")
@@ -55,6 +76,9 @@ def train(c):
             save_strategy=c.save_strategy,
             save_total_limit=c.save_total_limit,
             logging_steps=c.logging_steps,
+            max_grad_norm=c.max_grad_norm,
+            report_to="wandb" if c.use_wandb else "none",
+            run_name=c.wandb_run_name,
         )
         
         trainer = Trainer(
@@ -73,6 +97,9 @@ def train(c):
     print(f"Saving model to {c.output_dir}")
     trainer.save_model(c.output_dir)
     tokenizer.save_pretrained(c.output_dir)
+    
+    if c.use_wandb:
+        wandb.finish()
     
     print("Finished diffusion-style finetuning with prefix tokens never masked\n")
 
